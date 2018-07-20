@@ -47,17 +47,17 @@ namespace ApiReader.Tests
               });
         }
 
-        [Test]
-        public void IntervalTextBoxParseTest()
-        {
-            CrossThreadTestRunner runner = new CrossThreadTestRunner();
-            runner.RunInSTA(
-              delegate
-              {
-                  MainWindow window = new MainWindow();
-                  window.intervalBox.Text = "12";
-                  Assert.AreEqual(12, window.Interval);
-              });
-        }
+        //[Test]
+        //public void IntervalTextBoxParseTest()
+        //{
+        //    CrossThreadTestRunner runner = new CrossThreadTestRunner();
+        //    runner.RunInSTA(
+        //      delegate
+        //      {
+        //          MainWindow window = new MainWindow();
+        //          window.intervalBox.Text = "12";
+        //          Assert.AreEqual(12, window.Interval);
+        //      });
+        //}
     }
 }

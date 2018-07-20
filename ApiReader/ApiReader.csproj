@@ -59,6 +59,11 @@
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Reactive, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.4.0.0\lib\net46\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -77,9 +82,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controllers\IntervalActor.cs" />
-    <Compile Include="Controllers\ReadApiActor.cs" />
+    <Compile Include="ApiReaderViewModel.cs" />
+    <Compile Include="Actors\ReadApiActor.cs" />
     <Compile Include="Models\SalesObjects.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="Tests\ActorsTests.cs" />
     <Compile Include="Tests\CrossThreadTestRunner.cs" />
     <Compile Include="Tests\ViewModelTests.cs" />

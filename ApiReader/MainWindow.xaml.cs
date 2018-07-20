@@ -16,11 +16,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Akka.Actor;
-using ApiReader.Controllers;
+using ApiReader.Actors;
 using System.Windows.Threading;
-//using AkkaTest.Messages;
-
-
+using System.ComponentModel;
+using System.Reactive.Linq;
 
 namespace ApiReader
 {
@@ -29,22 +28,16 @@ namespace ApiReader
     /// </summary>
     public partial class MainWindow : Window
     {
+
         internal static MainWindow main;
-        
+        private ApiReaderViewModel apiReaderViewModel;
         public ActorSystem actorSystem;
-        
-        internal int Interval { get; set; }
-        //for printing Error messages for intervals
-        internal string Status
-        {
-            get { return apiText.Text.ToString(); }
-            set { Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => { apiText.Text = value; })); }
-        }
-        //for inject data to DataGrid
-        internal List<SalesObjects> StatusApi
-        {
-            set { Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => { dataGridApi.ItemsSource = value; })); }
-        }
+        private IActorRef actorReadApi;
+        private IObservable<long> syncMailObservable;
+        private IDisposable subscription = null;
+
+        private int Interval { get; set; }
+
         /// <summary>
         /// Constructor which initialize also intervalActor
         /// </summary>
@@ -52,34 +45,27 @@ namespace ApiReader
         {
             InitializeComponent();
             main = this;
+            apiReaderViewModel = new ApiReaderViewModel();
             actorSystem = ActorSystem.Create("ActorSystem");
-            var intervalActor = actorSystem.ActorOf<IntervalActor>();
+            actorReadApi = actorSystem.ActorOf(Props.Create(() => new ReadApiActor(apiReaderViewModel)));
             Interval = -1;
-            intervalActor.Tell(new object { });
+            DataContext = apiReaderViewModel;
         }
+
         /// <summary>
-        /// Initialization of actor which get  data from api and injects it to DataGrid
+        /// Initialization of actor which get  data from api and injects it to Tabel
         /// </summary>
         private void readApi_Click(object sender, RoutedEventArgs e)
         {
-            
-            var readApiActor = actorSystem.ActorOf<ReadApiActor>();
-            readApiActor.Tell(false);
+
+            actorReadApi.Tell(new object { });
 
         }
-        
-        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //foreach (var column in dataGridApi.Columns)
-            //{
-            //    var starSize = column.ActualWidth / dataGridApi.ActualWidth;
-            //    column.Width = new DataGridLength(starSize, DataGridLengthUnitType.Star);
-            //}
-        }
+
         /// <summary>
-        /// Try Parse string from input and set Interval
+        /// Try Parse string from input and start Intervals
         /// </summary>
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void IntervalTextBoxChanged(object sender, TextChangedEventArgs e)
         {
             Interval = -1;
             int j;
@@ -89,10 +75,38 @@ namespace ApiReader
                 Interval = j;
             }
             else
-                if(!String.Equals(textBox.Text, "")) MessageBox.Show("Please use only numbers", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
+            {
+                if (!String.Equals(textBox.Text, "")) MessageBox.Show("Please use only numbers", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            StartIntervals(j);
+        }
+        /// <summary>
+        /// Start intervals with given number
+        /// </summary>
+        private void StartIntervals(int timespan)
+        {
+            if (subscription != null)
+            {
+                subscription.Dispose();
+            }
+            if (timespan == Interval)
+            {
+                syncMailObservable = Observable.Interval(TimeSpan.FromSeconds(timespan));
+                subscription = syncMailObservable.Subscribe(s => actorReadApi.Tell(new object { }));
+
+            }
+        }
+
+        private void GithubUsernameTextBoxChanged(object sender, TextChangedEventArgs e)
+        {
+            apiReaderViewModel.GithubUsername = githubUsername.Text;
+            //apiReaderViewModel.NotifyPropertyChanged("githubUsername");
+        }
+        private void GithubRepositoryNameTextBoxChanged(object sender, TextChangedEventArgs e)
+        {
+            apiReaderViewModel.GithubRepositoryName = githubRepositoryName.Text;
+            //apiReaderViewModel.NotifyPropertyChanged("githubRepositoryName");
         }
 
     }
-    
-
 }
