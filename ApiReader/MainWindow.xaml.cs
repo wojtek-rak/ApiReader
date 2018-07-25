@@ -29,13 +29,10 @@ namespace ApiReader
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        internal static MainWindow main;
         private ApiReaderViewModel apiReaderViewModel;
         public ApiReaderViewModel ApiReaderViewModel { get; }
         public ActorSystem actorSystem;
         private IActorRef actorReadApi;
-        private IActorRef actorUpdateTable;
         private IObservable<long> syncMailObservable;
         private IDisposable subscription = null;
 
@@ -47,9 +44,6 @@ namespace ApiReader
         public MainWindow()
         {
             InitializeComponent();
-
-
-            main = this;
             apiReaderViewModel = new ApiReaderViewModel();
             apiReaderViewModel.ApiTabel = apiTabel;
             actorSystem = ActorSystem.Create("ActorSystem");
@@ -86,6 +80,7 @@ namespace ApiReader
             {
                 if (!String.Equals(textBox.Text, "")) MessageBox.Show("Please use only numbers", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
             }
+
             StartIntervals(j);
         }
         /// <summary>
@@ -97,11 +92,14 @@ namespace ApiReader
             {
                 subscription.Dispose();
             }
-            if (timespan == Interval)
+            if (Interval >= 1)
             {
-                syncMailObservable = Observable.Interval(TimeSpan.FromSeconds(timespan));
-                subscription = syncMailObservable.Subscribe(s => actorReadApi.Tell(new object { }));
+                if (timespan == Interval)
+                {
+                    syncMailObservable = Observable.Interval(TimeSpan.FromSeconds(timespan));
+                    subscription = syncMailObservable.Subscribe(s => actorReadApi.Tell(new object { }));
 
+                }
             }
         }
 
