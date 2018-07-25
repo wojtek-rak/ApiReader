@@ -19,17 +19,13 @@ namespace ApiReader
         void CreateApiTable();
         TableCell CreateCell(string input);
     }
-    //interface IApiReaderViewModel
-    //{
-    //    //String ApiText { get; set; }
-    //    void NotifyPropertyChanged(string propertyName);
-    //}
-    public partial class ApiReaderViewModel : INotifyPropertyChanged, ICreateTable //, IApiReaderViewModel
+
+    public partial class ApiReaderViewModel : ICreateTable //, INotifyPropertyChanged
     {
         //private ICreateTable _createTable;
         private Thickness myThickness = new Thickness();
         public Table ApiTabel { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
+        //public event PropertyChangedEventHandler PropertyChanged;
         public string GithubUsername { get; set; }
         public string GithubRepositoryName { get; set; }
         private JObject apiJObjectToTable = null;
@@ -59,7 +55,6 @@ namespace ApiReader
             GithubUsername = "google";
             GithubRepositoryName = "gvisor";
         }
-        //[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
         public virtual void CreateApiTable()
         {
             var thickness = 1;
@@ -94,16 +89,10 @@ namespace ApiReader
             return cell;
         }
 
-
-
-        public void Interval(object obj)
-        {
-
-        }
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        //public void NotifyPropertyChanged(string propertyName)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
     }
 
 

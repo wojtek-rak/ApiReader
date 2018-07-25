@@ -31,7 +31,7 @@
         </Grid.LayoutTransform>
 
 
-        <TextBox HorizontalAlignment="Stretch" Height="70" TextWrapping="Wrap" Text="{Binding Path=ApiText}" VerticalAlignment="Top" Margin="35,141,68,0" Name="apiTextDebug" RenderTransformOrigin="0.5,0.5"/>
+        <!--TextBox HorizontalAlignment="Stretch" Height="70" TextWrapping="Wrap" Text="{Binding Path=ApiText}" VerticalAlignment="Top" Margin="35,141,68,0" Name="apiTextDebug" RenderTransformOrigin="0.5,0.5"/-->
 
         <FlowDocumentScrollViewer Margin="0,0,0,116">
             <FlowDocument>
@@ -39,54 +39,6 @@
                     <TableRowGroup >
 
                         <TableRowGroup.Rows>
-                            <TableRow>
-                                <TableCell >
-                                    <Paragraph>
-                                        <Run>Hello :</Run>
-                                    </Paragraph>
-                                </TableCell>
-                                <TableCell>
-                                    <Paragraph>
-                                        <Run>World !</Run>
-                                    </Paragraph>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>
-                                    <Paragraph BorderThickness="0">
-                                        <Run>Hello :</Run>
-                                    </Paragraph>
-                                </TableCell>
-                                <TableCell>
-                                    <Paragraph>
-                                        <Run>World !</Run>
-                                    </Paragraph>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>
-                                    <Paragraph>
-                                        <Run>Hello :</Run>
-                                    </Paragraph>
-                                </TableCell>
-                                <TableCell>
-                                    <Paragraph>
-                                        <Run>Worldssssssssssssssssssssssssssssssssd !</Run>
-                                    </Paragraph>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>
-                                    <Paragraph>
-                                        <Run>Hello :</Run>
-                                    </Paragraph>
-                                </TableCell>
-                                <TableCell>
-                                    <Paragraph>
-                                        <Run>Worldasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaad !</Run>
-                                    </Paragraph>
-                                </TableCell>
-                            </TableRow>
                         </TableRowGroup.Rows>
 
                     </TableRowGroup>
