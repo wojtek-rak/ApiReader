@@ -17,8 +17,9 @@ namespace ApiReader.Actors
     interface IReadApiActor
     {
         String GetHtmlString(string userName, string repostioryName);
-        String ParseToJson(string htmlString);
-        void InputToTabel(string parsedJson);
+        String ParseToJsonString(string htmlString);
+        JObject ConvertToJobject(string parsedJson);
+        void InputToTabel(JObject jObject);
 
 
     }
@@ -28,14 +29,6 @@ namespace ApiReader.Actors
     public class ReadApiActor : ReceiveActor, IReadApiActor
     {
         private ApiReaderViewModel apiReaderViewModel;
-        //just for testing
-        public sealed class OperationResult
-        { 
-            public OperationResult()
-            {
-            }
-            public bool Successful { set; get; }
-        }
 
         public ReadApiActor(ApiReaderViewModel apiReaderViewModel)
         {
@@ -47,11 +40,12 @@ namespace ApiReader.Actors
         {
 
             String htmlString = GetHtmlString(apiReaderViewModel.GithubUsername, apiReaderViewModel.GithubRepositoryName);
-            String parsedJson = ParseToJson(htmlString);
-            InputToTabel(parsedJson);
+            String parsedJson = ParseToJsonString(htmlString);
+            JObject jObject = ConvertToJobject(parsedJson);
+            InputToTabel(jObject);
             //InputToTabel("empty");
             //Sender just for testing
-            Sender.Tell(new OperationResult() { Successful = true });
+            //Sender.Tell(new OperationResult() { Successful = true });
             return true;
         }
 
@@ -77,12 +71,11 @@ namespace ApiReader.Actors
             catch
             {
                 htmlString = "404";
-                MessageBox.Show("Unexpected error", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             return htmlString;
         }
 
-        public string ParseToJson(string htmlString)
+        public string ParseToJsonString(string htmlString)
         {
             if (htmlString == "404") return htmlString;
             JsonTextReader rs = new JsonTextReader(new StringReader(htmlString));
@@ -91,7 +84,7 @@ namespace ApiReader.Actors
             JObject o2 = (JObject)JToken.ReadFrom(rs);
             IList<string> keys = o2.Properties().Select(p => p.Name).ToList();
             StringBuilder output = new StringBuilder();
-            output.Append("[{\n");
+            output.Append("{\n");
             JToken value = "full_name";
             List<string> mylist = new List<string>(new string[] { "full_name", "mirror_url" , "description", "clone_url","language", "open_issues_count" ,"watchers",
                                        "created_at" });
@@ -118,100 +111,32 @@ namespace ApiReader.Actors
 
 
             }
-            var jsonResult = output.ToString().Remove(output.Length - 2) + "\n}]";
+            var jsonResult = output.ToString().Remove(output.Length - 2) + "\n}";
             return jsonResult;
         }
 
-        public void InputToTabel(string parsedJson)
+        public JObject ConvertToJobject(string parsedJson)
         {
-            if (parsedJson == "404") return;
-            var result = JsonConvert.DeserializeObject<List<SalesObjects>>(parsedJson);
-
-            apiReaderViewModel.ApiText = parsedJson;
-
-            //apiReaderViewModel.ApiText = System.DateTime.Now.ToString();
-        }
-
-
-
-        /*
-        string url = "http://localhost:10030/alfaRestAPI/api/RestAPI/GetSharesPrices";
-try
-{
-    HttpWebRequest httpprequest = WebRequest.Create(url) as HttpWebRequest;
-
-    httpprequest.UserAgent = "userAgent";
-
-    httpprequest.Method = "GET";
-
-    HttpWebResponse response = (HttpWebResponse)httpprequest.GetResponse();
-
-
-    String htmlString;
-    using (var reader = new StreamReader(response.GetResponseStream()))
-    {
-        htmlString = reader.ReadToEnd();
-
-        var result = JsonConvert.DeserializeObject<List<SalesObjects>>(htmlString);
-
-        //Sender just for testing
-        Sender.Tell(new OperationResult() { Successful = true });
-
-        //inject data to DataGrid
-        MainWindow.main.StatusApi = result;
-        //Reset warning string
-        MainWindow.main.Status = "";
-    }
-}
-catch (WebException ex)
-{
-    //Sender for testing
-    Sender.Tell(new OperationResult());
-    if (!interval)
-    {
-        if (ex.Status == WebExceptionStatus.ProtocolError &&
-        ex.Response != null)
-        {
-            var resp = (HttpWebResponse)ex.Response;
-            if (resp.StatusCode == HttpStatusCode.NotFound)
+            if (parsedJson == "404") { MessageBox.Show("404 Error Failed to get API", "Alert", MessageBoxButton.OK, MessageBoxImage.Information); return null; }
+            //apiReaderViewModel.ApiText = parsedJson;
+            try
             {
-                MessageBox.Show("wrong URL", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
+                var jObject = JsonConvert.DeserializeObject<JObject>(parsedJson);
+                return jObject;
             }
-            else
+            catch
             {
-                MessageBox.Show(resp.StatusCode.ToString(), "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
+                return null;
             }
         }
-        else
-        {
-            MessageBox.Show("Unexpected error", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-    }
-    // try to avoid a lot of error windows in interval mode
-    else
-    {
-        if (ex.Status == WebExceptionStatus.ProtocolError &&
-        ex.Response != null)
-        {
-            var resp = (HttpWebResponse)ex.Response;
-            if (resp.StatusCode == HttpStatusCode.NotFound)
-            {
-                MainWindow.main.Status = "wrong URL";
-            }
-            else
-            {
-                MainWindow.main.Status = resp.StatusCode.ToString();
-            }
-        }
-        else
-        {
-            MainWindow.main.Status = "Unexpected error";
-        }
-    }
-}
 
-return true;*/
+        public void InputToTabel(JObject jObject)
+        {
+            if (jObject == null) return;
+            apiReaderViewModel.ApiJObjectToTable = jObject;
 
+
+        }
 
     }
 }

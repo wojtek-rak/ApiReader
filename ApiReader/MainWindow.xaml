@@ -5,11 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ApiReader"
         mc:Ignorable="d"
-        Background="Orange"
-        Title="MainWindow" Height="450" Width="300" MinWidth="300" MinHeight="450" >
+        Name="myMainWindow"
+        Background="Wheat"
+        
+        Title="MainWindow" Height="450" Width="600" MinWidth="600" MinHeight="450" >
 
 
-    <Grid Margin="0,0,-6.4,0" RenderTransformOrigin="0.5,0.5">
+    <Grid Margin="0,0,-6.4,0" RenderTransformOrigin="0.5,0.5" SizeChanged="MainGrid_SizeChanged">
         <Grid.RenderTransform>
             <TransformGroup>
                 <ScaleTransform/>
@@ -18,16 +20,97 @@
                 <TranslateTransform/>
             </TransformGroup>
         </Grid.RenderTransform>
-        <TextBox HorizontalAlignment="Stretch" Height="112" TextWrapping="Wrap" Text="{Binding Path=ApiText}" VerticalAlignment="Top" Margin="10,10,10,0" Name="apiTextDebug" RenderTransformOrigin="0.5,0.5"/>
+
+
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="ApplicationScaleTransform"
+                        CenterX="0"
+                        CenterY="0"
+                        ScaleX="{Binding ElementName=myMainWindow, Path=ScaleValue}"
+                        ScaleY="{Binding ElementName=myMainWindow, Path=ScaleValue}" />
+        </Grid.LayoutTransform>
+
+
+        <TextBox HorizontalAlignment="Stretch" Height="70" TextWrapping="Wrap" Text="{Binding Path=ApiText}" VerticalAlignment="Top" Margin="35,141,68,0" Name="apiTextDebug" RenderTransformOrigin="0.5,0.5"/>
+
+        <FlowDocumentScrollViewer Margin="0,0,0,116">
+            <FlowDocument>
+                <Table Name="apiTabel" Background="WhiteSmoke" BorderThickness="3" BorderBrush="Black"  >
+                    <TableRowGroup >
+
+                        <TableRowGroup.Rows>
+                            <TableRow>
+                                <TableCell >
+                                    <Paragraph>
+                                        <Run>Hello :</Run>
+                                    </Paragraph>
+                                </TableCell>
+                                <TableCell>
+                                    <Paragraph>
+                                        <Run>World !</Run>
+                                    </Paragraph>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Paragraph BorderThickness="0">
+                                        <Run>Hello :</Run>
+                                    </Paragraph>
+                                </TableCell>
+                                <TableCell>
+                                    <Paragraph>
+                                        <Run>World !</Run>
+                                    </Paragraph>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Paragraph>
+                                        <Run>Hello :</Run>
+                                    </Paragraph>
+                                </TableCell>
+                                <TableCell>
+                                    <Paragraph>
+                                        <Run>Worldssssssssssssssssssssssssssssssssd !</Run>
+                                    </Paragraph>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Paragraph>
+                                        <Run>Hello :</Run>
+                                    </Paragraph>
+                                </TableCell>
+                                <TableCell>
+                                    <Paragraph>
+                                        <Run>Worldasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaad !</Run>
+                                    </Paragraph>
+                                </TableCell>
+                            </TableRow>
+                        </TableRowGroup.Rows>
+
+                    </TableRowGroup>
+                </Table>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>
+
+
         <!--DataGrid  HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Top" Width="auto" ColumnWidth="*" Margin="10,10,9.6,80" SelectionChanged="DataGrid_SelectionChanged" Name="dataGridApi" /-->
-        <Button Height="23" HorizontalAlignment="Left" Margin="35,0,0,25" Name="readApi" VerticalAlignment="Bottom" Width="75" Click="readApi_Click"  Command="{Binding GetApi}" >Get Data</Button>
+        <Button Height="23" HorizontalAlignment="Left"  Margin="35,0,0,25" Name="readApi" VerticalAlignment="Bottom" Width="250" Click="readApi_Click"  Command="{Binding GetApi}" >
+            Get Data
+            <Button.LayoutTransform>
+                <ScaleTransform ScaleX="1" ScaleY="1"/>
+            </Button.LayoutTransform>
+        </Button>
         <!--Button Height="23" HorizontalAlignment="Right" Margin="0,0,34.2,17" Name="readApiInterval" VerticalAlignment="Bottom" Width="75" Click="readApiInterval_Click" >Close</-->
-        <TextBox Height="23" Width="125" HorizontalAlignment="Right" AcceptsReturn="True" VerticalAlignment="Bottom" TextWrapping="Wrap" Margin="0,0,165,70" Text="{Binding Path=GithubUsername}" Name="githubUsername" TextChanged="GithubUsernameTextBoxChanged" />
-        <TextBox Height="23" Width="150" HorizontalAlignment="Right" AcceptsReturn="True" VerticalAlignment="Bottom" TextWrapping="Wrap" Margin="0,0,10,70" Text="{Binding Path=GithubRepositoryName}" Name="githubRepositoryName" TextChanged="GithubRepositoryNameTextBoxChanged" />
-        <TextBox Height="23" Width="100" HorizontalAlignment="Right" AcceptsReturn="True" VerticalAlignment="Bottom" TextWrapping="Wrap" Margin="0,0,35,25" Name="intervalBox" TextChanged="IntervalTextBoxChanged" />
-        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,48" TextWrapping="Wrap" Text="Set interval (min 1sec)" Height="18" Width="125"/>
+        <TextBox Height="23" Width="250" HorizontalAlignment="left" AcceptsReturn="True" VerticalAlignment="Bottom" TextWrapping="Wrap" Margin="35,0,0,69" Text="{Binding Path=GithubUsername}" Name="githubUsername" TextChanged="GithubUsernameTextBoxChanged" />
+        <TextBox Height="23" Width="250" HorizontalAlignment="Right" AcceptsReturn="True" VerticalAlignment="Bottom" TextWrapping="Wrap" Margin="0,0,35,69" Text="{Binding Path=GithubRepositoryName}" Name="githubRepositoryName" TextChanged="GithubRepositoryNameTextBoxChanged" />
+        <TextBox Height="23" Width="250" HorizontalAlignment="Right" AcceptsReturn="True" VerticalAlignment="Bottom" TextWrapping="Wrap" Margin="0,0,35,25" Name="intervalBox" TextChanged="IntervalTextBoxChanged" />
+        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,35,48" TextWrapping="Wrap" Text="Set interval (min 1sec)" Height="23" Width="250" FontSize="16"/>
         <TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,35,10" Foreground="red" TextWrapping="Wrap" Name="apiText" Text="" Height="18" Width="97"/>
-        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,165,98" TextWrapping="Wrap" Text="Github username:" Height="18" Width="125"/>
-        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,98" TextWrapping="Wrap" Height="18" Width="150"><Run Text="Github repository name"/><Run Text=":"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="35,0,0,92" TextWrapping="Wrap" Text="Github username:" Height="24" Width="250" RenderTransformOrigin="0.838,0.448" FontSize="16"/>
+        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,35,92" TextWrapping="Wrap" Height="24" Width="250" FontSize="16"><Run Text="Github repository name"/><Run Text=":"/></TextBlock>
+
+
     </Grid>
 </Window>

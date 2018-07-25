@@ -11,7 +11,7 @@ namespace ApiReader.Tests
 {
 
     // Class get from http://www.hedgate.net/articles/2007/01/08/instantiating-a-wpf-control-from-an-nunit-test/
-
+    //actually not used
     public class CrossThreadTestRunner
     {
         private Exception lastException;

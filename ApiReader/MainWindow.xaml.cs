@@ -20,6 +20,7 @@ using ApiReader.Actors;
 using System.Windows.Threading;
 using System.ComponentModel;
 using System.Reactive.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace ApiReader
 {
@@ -31,8 +32,10 @@ namespace ApiReader
 
         internal static MainWindow main;
         private ApiReaderViewModel apiReaderViewModel;
+        public ApiReaderViewModel ApiReaderViewModel { get; }
         public ActorSystem actorSystem;
         private IActorRef actorReadApi;
+        private IActorRef actorUpdateTable;
         private IObservable<long> syncMailObservable;
         private IDisposable subscription = null;
 
@@ -44,13 +47,18 @@ namespace ApiReader
         public MainWindow()
         {
             InitializeComponent();
+
+
             main = this;
             apiReaderViewModel = new ApiReaderViewModel();
+            apiReaderViewModel.ApiTabel = apiTabel;
             actorSystem = ActorSystem.Create("ActorSystem");
-            actorReadApi = actorSystem.ActorOf(Props.Create(() => new ReadApiActor(apiReaderViewModel)));
+            actorReadApi = actorSystem.ActorOf(Props.Create(() => new ReadApiActor(apiReaderViewModel)).WithDispatcher("akka.actor.synchronized-dispatcher"));
             Interval = -1;
             DataContext = apiReaderViewModel;
         }
+
+
 
         /// <summary>
         /// Initialization of actor which get  data from api and injects it to Tabel
@@ -100,13 +108,65 @@ namespace ApiReader
         private void GithubUsernameTextBoxChanged(object sender, TextChangedEventArgs e)
         {
             apiReaderViewModel.GithubUsername = githubUsername.Text;
-            //apiReaderViewModel.NotifyPropertyChanged("githubUsername");
         }
         private void GithubRepositoryNameTextBoxChanged(object sender, TextChangedEventArgs e)
         {
             apiReaderViewModel.GithubRepositoryName = githubRepositoryName.Text;
-            //apiReaderViewModel.NotifyPropertyChanged("githubRepositoryName");
         }
+
+
+
+        /// <summary>
+        /// Scaling UI
+        /// </summary>
+
+        public static readonly DependencyProperty ScaleValueProperty = DependencyProperty.Register("ScaleValue", typeof(double), typeof(MainWindow), new UIPropertyMetadata(1.0, null, new CoerceValueCallback(OnCoerceScaleValue)));
+
+        private static object OnCoerceScaleValue(DependencyObject o, object value)
+        {
+            MainWindow mainWindow = o as MainWindow;
+            if (mainWindow != null)
+                return mainWindow.OnCoerceScaleValue((double)value);
+            else
+                return value;
+        }
+
+        protected virtual double OnCoerceScaleValue(double value)
+        {
+            if (double.IsNaN(value))
+                return 1.0f;
+
+            value = Math.Max(0.1, value);
+            return value;
+        }
+
+        public double ScaleValue
+        {
+            get
+            {
+                return (double)GetValue(ScaleValueProperty);
+            }
+            set
+            {
+                SetValue(ScaleValueProperty, value);
+            }
+        }
+
+        private void MainGrid_SizeChanged(object sender, EventArgs e)
+        {
+            CalculateScale();
+        }
+
+
+        private void CalculateScale()
+        {
+            double yScale = ActualHeight / 450;
+            double xScale = ActualWidth / 600;
+            double value = Math.Min(xScale, yScale);
+            ScaleValue = (double)OnCoerceScaleValue(myMainWindow, value);
+            Console.WriteLine(xScale);
+        }
+
 
     }
 }
