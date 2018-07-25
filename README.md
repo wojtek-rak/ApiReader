@@ -1,12 +1,17 @@
 # ApiReader
-App for reading and displaying
+App for reading and displaying API from Github.
+Enter Username and Repositoryname and click Get Data.
+You can refresh it in time by enter interval time ( in sec )
 
 Used NuGet: <br />
-System.Collections.Immutable <br />
 NUnit <br />
+MoQ <br />
+System.Reactive <br />
 Akka <br />
 Akka.TestKit <br />
 Akka.TestKit.NUnit <br />
 Newtonsoft.Json <br />
 
-![alt text](https://i.imgur.com/GDE3CX5.jpg)
+![alt text](https://i.imgur.com/AVXEQVL.jpg)
+
+![alt text](https://i.imgur.com/RKqNelO.jpg)
