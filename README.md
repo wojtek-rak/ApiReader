@@ -1,5 +1,7 @@
 # ApiReader
-App for reading and displaying
+App for reading and displaying API from Github.
+Enter Username and Repositoryname and click Get Data.
+You can refresh it in time by enter interval time ( in sec )
 
 Used NuGet: <br />
 NUnit <br />
