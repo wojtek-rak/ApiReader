@@ -1,7 +1,7 @@
 # ApiReader
-App for reading GithubApi and displaying data about repository.
-Enter Username and Repositoryname and click Get Data.
-You can refresh it in time by enter interval time ( in sec )
+App for reading GithubApi and displaying data about repository. <br />
+Enter Username and Repositoryname and click Get Data. <br />
+You can refresh it in time by enter interval time ( in sec ) <br />
 
 Used NuGet: <br />
 NUnit <br />
