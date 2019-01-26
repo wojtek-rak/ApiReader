@@ -1,5 +1,5 @@
 # ApiReader
-App for reading and displaying API from Github.
+App for reading GithubApi and displaying data about repository.
 Enter Username and Repositoryname and click Get Data.
 You can refresh it in time by enter interval time ( in sec )
 
